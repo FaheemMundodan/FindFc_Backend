@@ -12,7 +12,10 @@
 
 from django.http import JsonResponse
 from django.conf import settings
-from .models import details
+from .models import details,Material
+from django.core import serializers
+
+
 
 def index(request):
      events = details.objects.all()
@@ -27,3 +30,21 @@ def index(request):
          event_list.append(event_dict)
 
      return JsonResponse({"events": event_list})
+
+
+from django.http import JsonResponse
+from .models import Material
+
+def materials_list(request):
+    course = request.GET.get('course')
+    year = request.GET.get('year')
+    material_type = request.GET.get('material_type')
+
+    materials = Material.objects.filter(
+        course__icontains=course if course else "",
+        year__icontains=year if year else "",
+        material_type__icontains=material_type if material_type else "",
+    ).values('id', 'file', 'course', 'year', 'material_type')  # Adjust the fields as necessary
+
+    materials_list = list(materials)
+    return JsonResponse({"materials": materials_list})
