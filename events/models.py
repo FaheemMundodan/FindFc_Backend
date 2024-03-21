@@ -88,6 +88,10 @@ class Material(models.Model):
     def __str__(self):
         return f"{self.course} Year {self.year} Material"
     
+class gallery (models.Model):
+    event_name= models.CharField(max_length=64)
+    poster=models.FileField(default="")
+        
 
 
 # Your main model
