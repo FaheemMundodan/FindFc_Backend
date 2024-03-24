@@ -14,7 +14,8 @@ from django.http import JsonResponse
 from django.conf import settings
 from .models import details,Material,gallery
 from django.core import serializers
-
+from django.shortcuts import render, redirect
+from .forms import MaterialForm, GalleryForm
 
 
 def index(request):
@@ -88,3 +89,22 @@ def index(request):
          event_list.append(event_dict)
 
      return JsonResponse({"events": event_list})
+def upload_material(request):
+    if request.method == 'POST':
+        form = MaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return ("") # Redirect to a success URL
+    else:
+        form = MaterialForm()
+    return render(request, 'material_upload.html', {'form': form})
+
+def upload_gallery(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('success_url')  # Redirect to a success URL
+    else:
+        form = GalleryForm()
+    return render(request, 'gallery_upload.html', {'form': form})
